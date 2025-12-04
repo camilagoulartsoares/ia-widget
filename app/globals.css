@@ -1,26 +1,147 @@
-@import "tailwindcss";
+/* --- IA Widget - Estilos completos --- */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.ia-widget-container {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 9999;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Botão flutuante */
+.ia-widget-fab {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #111827;
+  color: #f9fafb;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.2s ease-in-out;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.ia-widget-fab:hover {
+  opacity: 0.9;
+}
+
+/* Janela do widget */
+.ia-widget-window {
+  width: 320px;
+  max-height: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 12px;
+  animation: fadeUp 0.25s ease-out;
+}
+
+/* Header */
+.ia-widget-header {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Botão fechar */
+.ia-widget-close {
+  border: none;
+  background: transparent;
+  color: #f9fafb;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Mensagens */
+.ia-widget-messages {
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
+  background: #f3f4f6;
+}
+
+.ia-widget-message {
+  max-width: 85%;
+  padding: 8px 10px;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Mensagem do usuário */
+.ia-widget-message-user {
+  background: #111827;
+  color: #f9fafb;
+  margin-left: auto;
+  border-bottom-right-radius: 2px;
+}
+
+/* Mensagem do bot */
+.ia-widget-message-bot {
+  background: #e5e7eb;
+  color: #111827;
+  margin-right: auto;
+  border-bottom-left-radius: 2px;
+}
+
+/* Área de input */
+.ia-widget-input-area {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.ia-widget-input {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  padding: 6px 10px;
+  font-size: 13px;
+  transition: border-color 0.2s ease;
+}
+
+.ia-widget-input:focus {
+  outline: none;
+  border-color: #111827;
+}
+
+.ia-widget-send {
+  border-radius: 999px;
+  border: none;
+  background: #111827;
+  color: #ffffff;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ia-widget-send:hover {
+  opacity: 0.9;
+}
+
+/* Animação suave */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
