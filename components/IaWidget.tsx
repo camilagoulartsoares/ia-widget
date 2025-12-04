@@ -10,12 +10,16 @@ type Message = {
 
 const IaWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, from: "bot", text: "Oi! Eu sou seu widget de IA. Como posso te ajudar?" },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
-  const handleSend = (event: FormEvent) => {
+  const quickReplies = [
+    "I'm prepared and eager to start",
+    "Can you send me the new task?",
+    "Thank you!",
+  ];
+
+  function handleSend(event: FormEvent) {
     event.preventDefault();
     const text = input.trim();
     if (!text) return;
@@ -32,65 +36,100 @@ const IaWidget: React.FC = () => {
     const botMessage: Message = {
       id: Date.now() + 1,
       from: "bot",
-      text: "Sou só o front ainda 😊, mas em breve posso responder com IA de verdade.",
+      text: "Soon DealSafe will help you review and protect your deals automatically. 😊",
     };
 
     setTimeout(() => {
       setMessages((prev) => [...prev, botMessage]);
     }, 400);
-  };
+  }
+
+  function handleQuickReply(text: string) {
+    setInput(text);
+  }
 
   return (
     <div className="ia-widget-container">
       {isOpen && (
-        <div className="ia-widget-window">
-          <header className="ia-widget-header">
-            <span>Assistente IA</span>
-            <button
-              type="button"
-              className="ia-widget-close"
-              onClick={() => setIsOpen(false)}
-            >
-              ×
-            </button>
+        <div className="dealsafe-panel">
+          <header className="dealsafe-header">
+            <span className="dealsafe-title">DealSafe</span>
+
+            <div className="dealsafe-header-right">
+              <span className="dealsafe-pill">Today</span>
+              <button type="button" className="dealsafe-icon-btn">
+                ⋯
+              </button>
+            </div>
           </header>
 
-          <div className="ia-widget-messages">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={
-                  msg.from === "user"
-                    ? "ia-widget-message ia-widget-message-user"
-                    : "ia-widget-message ia-widget-message-bot"
-                }
-              >
-                {msg.text}
+          <div className="dealsafe-content">
+            <div className="dealsafe-avatar-wrapper">
+              <div className="dealsafe-avatar">
+                <span className="dealsafe-avatar-wave" />
               </div>
-            ))}
+            </div>
+
+            <p className="dealsafe-main-text">
+              Good morning, are you ready to make safer deals?{" "}
+              <br />
+              Today is important for you.
+            </p>
+
+            <span className="dealsafe-time">08:05</span>
+
+            <div className="dealsafe-quick-replies">
+              {quickReplies.map((qr) => (
+                <button
+                  key={qr}
+                  type="button"
+                  className="dealsafe-chip"
+                  onClick={() => handleQuickReply(qr)}
+                >
+                  {qr}
+                </button>
+              ))}
+            </div>
+
+            <div className="dealsafe-messages">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={
+                    msg.from === "user"
+                      ? "dealsafe-message dealsafe-message-user"
+                      : "dealsafe-message dealsafe-message-bot"
+                  }
+                >
+                  {msg.text}
+                </div>
+              ))}
+            </div>
           </div>
 
-          <form className="ia-widget-input-area" onSubmit={handleSend}>
+          <form className="dealsafe-input-bar" onSubmit={handleSend}>
             <input
               type="text"
-              placeholder="Digite sua mensagem..."
+              placeholder="Write your answer..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="ia-widget-input"
+              className="dealsafe-input"
             />
-            <button type="submit" className="ia-widget-send">
-              Enviar
+
+            <button type="submit" className="dealsafe-launch-btn">
+              Launch app
             </button>
           </form>
         </div>
       )}
 
+      {/* Botão bolinha flutuante que abre/fecha o widget */}
       <button
         type="button"
-        className="ia-widget-fab"
+        className="dealsafe-fab"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        {isOpen ? "Fechar" : "IA"}
+        DS
       </button>
     </div>
   );
