@@ -1,0 +1,181 @@
+/* Overlay do widget */
+.stage {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* deixa clicar no site por trás */
+  z-index: 9999;
+  font-family: inherit;
+}
+
+/* Card do widget (ancorado no canto) */
+.card {
+  pointer-events: auto;
+  position: fixed;
+  right: 28px;
+  bottom: 108px; /* espaço pro botão X */
+  width: 270px;
+  height: 360px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 22px 60px rgba(16, 24, 40, 0.18);
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px 10px 12px;
+  background: #ffffff;
+}
+
+.headerIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #2346d2; /* azul do ícone */
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: rgba(15, 23, 42, 0.55);
+  margin-top: 1px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(15, 23, 42, 0.08);
+}
+
+/* Lista com scroll (igual ao print) */
+.list {
+  padding: 10px 10px 0 10px;
+  height: 270px;
+  overflow-y: auto;
+}
+
+/* Scrollbar “cinza” como na imagem */
+.list::-webkit-scrollbar {
+  width: 10px;
+}
+.list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.list::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18);
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+}
+
+/* Itens: sem “borda/card” forte (mais clean igual imagem) */
+.item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: transparent;
+}
+
+.item:hover {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  font-size: 14px;
+}
+
+/* Paleta bem suave como a imagem */
+.green {
+  background: rgba(34, 197, 94, 0.12);
+  color: rgb(34, 197, 94);
+}
+.blue {
+  background: rgba(59, 130, 246, 0.12);
+  color: rgb(59, 130, 246);
+}
+.teal {
+  background: rgba(20, 184, 166, 0.12);
+  color: rgb(20, 184, 166);
+}
+.red {
+  background: rgba(239, 68, 68, 0.12);
+  color: rgb(239, 68, 68);
+}
+
+.text {
+  display: grid;
+  gap: 4px;
+}
+
+.text strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.88);
+}
+
+.text span {
+  font-size: 11px;
+  line-height: 1.25;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+/* Footer */
+.footer {
+  padding: 10px 12px 12px 12px;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+  background: #ffffff;
+}
+
+.link {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  color: rgba(15, 23, 42, 0.45);
+  cursor: pointer;
+  text-align: center;
+}
+
+.link:hover {
+  color: rgba(15, 23, 42, 0.65);
+}
+
+/* Botão X flutuante (canto inferior direito) */
+.fab {
+  pointer-events: auto;
+  position: fixed;
+  right: 36px;
+  bottom: 28px;
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  border: none;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 18px 44px rgba(29, 78, 216, 0.35);
+  cursor: pointer;
+}
