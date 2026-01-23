@@ -1,42 +1,21 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import styles from "./Widget.module.css";
-import attendant from "@/public/attendant.jpg";
+import "../embed/widget.css";
+
+const ATTENDANT_URL = "http://localhost:3000/attendant.jpg";
 
 const items = [
-  {
-    id: "trends",
-    title: "Análise de Tendências",
-    desc: "Identifique padrões nos seus dados financeiros",
-    color: "green",
-    progress: 85,
-  },
-  {
-    id: "costs",
-    title: "Otimização de Gastos",
-    desc: "Sugestões para reduzir custos operacionais",
-    color: "blue",
-    progress: 60,
-  },
-  {
-    id: "report",
-    title: "Relatório Inteligente",
-    desc: "Gere relatórios automáticos com insights",
-    color: "teal",
-    progress: 45,
-  },
-  {
-    id: "alerts",
-    title: "Alertas Financeiros",
-    desc: "Receba avisos sobre anomalias detectadas",
-    color: "red",
-    progress: 30,
-  },
-];
+  { id: "trends", title: "Análise de Tendências", desc: "Identifique padrões nos seus dados financeiros", color: "green", progress: 85 },
+  { id: "costs", title: "Otimização de Gastos", desc: "Sugestões para reduzir custos operacionais", color: "blue", progress: 60 },
+  { id: "report", title: "Relatório Inteligente", desc: "Gere relatórios automáticos com insights", color: "teal", progress: 45 },
+  { id: "alerts", title: "Alertas Financeiros", desc: "Receba avisos sobre anomalias detectadas", color: "red", progress: 30 },
+] as const;
+
+type Item = (typeof items)[number];
+
 
 type View = "menu" | "chat";
+
+
 
 interface Message {
   id: number;
@@ -48,42 +27,34 @@ interface Message {
 export default function Widget() {
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<View>("menu");
-  const [activeItem, setActiveItem] = useState<(typeof items)[0] | null>(null);
+  const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const now = () => {
-    if (!mounted) return "";
-    return new Date().toLocaleTimeString("pt-BR", {
+  const now = () =>
+    new Date().toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
 
   const prevMessagesLenRef = useRef(0);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (messages.length !== prevMessagesLenRef.current) {
       prevMessagesLenRef.current = messages.length;
       scrollToBottom();
     }
-  });
+  }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-
-
-  const handleItemClick = (item: (typeof items)[0]) => {
+  const handleItemClick = (item: Item) => {
     setActiveItem(item);
+    setView("chat");
     setView("chat");
     setIsTyping(true);
     setMessages([]);
@@ -147,7 +118,7 @@ export default function Widget() {
     }, 1500);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -166,17 +137,14 @@ export default function Widget() {
   };
 
   return (
-    <div className={styles.stage}>
+    <div className="iaStage">
       {/* Card do Widget */}
-      <div
-        className={`${styles.card} ${isOpen ? styles.cardOpen : styles.cardClosed
-          }`}
-      >
+      <div className={`iaCard ${isOpen ? "iaCardOpen" : "iaCardClosed"}`}>
         {view === "menu" ? (
           <>
             {/* Header Menu */}
-            <header className={styles.header}>
-              <div className={styles.headerIcon}>
+            <header className="iaHeader">
+              <div className="iaHeaderIcon">
                 <svg
                   width="22"
                   height="22"
@@ -207,24 +175,24 @@ export default function Widget() {
                   />
                 </svg>
               </div>
-              <div className={styles.headerText}>
-                <div className={styles.title}>Assistente IA Financeiro</div>
-                <div className={styles.subtitle}>Como posso ajudar?</div>
+              <div className="iaHeaderText">
+                <div className="iaTitle">Assistente IA Financeiro</div>
+                <div className="iaSubtitle">Como posso ajudar?</div>
               </div>
             </header>
 
-            <div className={styles.divider} />
+            <div className="iaDivider" />
 
             {/* Lista */}
-            <div className={styles.list}>
+            <div className="iaList">
               {items.map((item) => (
                 <button
                   type="button"
                   key={item.id}
-                  className={styles.item}
+                  className="iaItem"
                   onClick={() => handleItemClick(item)}
                 >
-                  <div className={`${styles.icon} ${styles[item.color]}`}>
+                  <div className={`iaIcon iaIcon_${item.color}`}>
                     {item.color === "green" && (
                       <svg
                         width="18"
@@ -282,15 +250,14 @@ export default function Widget() {
                     )}
                   </div>
 
-                  <div className={styles.text}>
+                  <div className="iaText">
                     <strong>{item.title}</strong>
                     <span>{item.desc}</span>
                   </div>
 
-                  <div className={styles.progressBar}>
+                  <div className="iaProgressBar">
                     <div
-                      className={`${styles.progressFill} ${styles[`${item.color}Bar`]
-                        }`}
+                      className={`iaProgressFill iaProgress_${item.color}`}
                       style={{ height: `${item.progress}%` }}
                     />
                   </div>
@@ -299,8 +266,8 @@ export default function Widget() {
             </div>
 
             {/* Footer */}
-            <footer className={styles.footer}>
-              <button type="button" className={styles.link}>
+            <footer className="iaFooter">
+              <button type="button" className="iaLink">
                 Ver todas as funcionalidades
                 <svg
                   width="16"
@@ -318,12 +285,8 @@ export default function Widget() {
         ) : (
           <>
             {/* Chat Header */}
-            <header className={styles.chatHeader}>
-              <button
-                type="button"
-                className={styles.backButton}
-                onClick={handleBack}
-              >
+            <header className="iaChatHeader">
+              <button type="button" className="iaBackButton" onClick={handleBack}>
                 <svg
                   width="20"
                   height="20"
@@ -336,32 +299,26 @@ export default function Widget() {
                 </svg>
               </button>
 
-              <div className={styles.chatAvatarWrapper}>
-                {/* ✅ IMAGEM padronizada via import */}
-                <Image
-                  src={attendant}
+              <div className="iaChatAvatarWrapper">
+                <img
+                  src={ATTENDANT_URL}
                   alt="Ana"
                   width={48}
                   height={48}
-                  className={styles.chatAvatarImage}
-                  priority
+                  className="iaChatAvatarImage"
                 />
-                <span className={styles.onlineBadge} />
+                <span className="iaOnlineBadge" />
               </div>
 
-              <div className={styles.chatHeaderText}>
-                <div className={styles.chatTitle}>Ana</div>
-                <div className={styles.chatStatus}>
-                  <span className={styles.statusDot} />
+              <div className="iaChatHeaderText">
+                <div className="iaChatTitle">Ana</div>
+                <div className="iaChatStatus">
+                  <span className="iaStatusDot" />
                   Online agora
                 </div>
               </div>
 
-              <button
-                type="button"
-                className={styles.closeButton}
-                onClick={handleClose}
-              >
+              <button type="button" className="iaCloseButton" onClick={handleClose}>
                 <svg
                   width="18"
                   height="18"
@@ -377,55 +334,44 @@ export default function Widget() {
             </header>
 
             {/* Chat Messages */}
-            <div className={styles.chatMessages}>
+            <div className="iaChatMessages">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`${styles.message} ${msg.sender === "user"
-                      ? styles.userMessage
-                      : styles.botMessage
-                    }`}
+                  className={`iaMessage ${msg.sender === "user" ? "iaUserMessage" : "iaBotMessage"}`}
                 >
                   {msg.sender === "bot" && (
-                    <div className={styles.messageBotAvatar}>
-                      {/* ✅ IMAGEM padronizada via import */}
-                      <Image
-                        src={attendant}
+                    <div className="iaMessageBotAvatar">
+                      <img
+                        src={ATTENDANT_URL}
                         alt="Ana"
                         width={32}
                         height={32}
-                        className={styles.messageBotAvatarImage}
+                        className="iaMessageBotAvatarImage"
                       />
                     </div>
                   )}
 
-                  <div className={styles.messageContent}>
+                  <div className="iaMessageContent">
                     <p>{msg.text}</p>
-
-                    {/* ✅ Evita hydration mismatch: só mostra se tiver time */}
-                    {msg.time && (
-                      <span className={styles.messageTime}>{msg.time}</span>
-                    )}
+                    {msg.time && <span className="iaMessageTime">{msg.time}</span>}
                   </div>
                 </div>
               ))}
 
               {isTyping && (
-                <div className={`${styles.message} ${styles.botMessage}`}>
-                  <div className={styles.messageBotAvatar}>
-                    {/* ✅ IMAGEM padronizada via import */}
-                    <Image
-                      src={attendant}
+                <div className="iaMessage iaBotMessage">
+                  <div className="iaMessageBotAvatar">
+                    <img
+                      src={ATTENDANT_URL}
                       alt="Ana"
                       width={32}
                       height={32}
-                      className={styles.messageBotAvatarImage}
+                      className="iaMessageBotAvatarImage"
                     />
                   </div>
-                  <div
-                    className={`${styles.messageContent} ${styles.typingIndicator}`}
-                  >
-                    <div className={styles.typingDots}>
+                  <div className="iaMessageContent iaTypingIndicator">
+                    <div className="iaTypingDots">
                       <span />
                       <span />
                       <span />
@@ -438,9 +384,9 @@ export default function Widget() {
             </div>
 
             {/* Chat Input */}
-            <div className={styles.chatInputWrapper}>
-              <div className={styles.chatInputContainer}>
-                <button type="button" className={styles.attachButton}>
+            <div className="iaChatInputWrapper">
+              <div className="iaChatInputContainer">
+                <button type="button" className="iaAttachButton">
                   <svg
                     width="20"
                     height="20"
@@ -455,7 +401,7 @@ export default function Widget() {
 
                 <input
                   type="text"
-                  className={styles.chatInput}
+                  className="iaChatInput"
                   placeholder="Digite sua mensagem..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -464,8 +410,7 @@ export default function Widget() {
 
                 <button
                   type="button"
-                  className={`${styles.sendButton} ${input.trim() ? styles.sendButtonActive : ""
-                    }`}
+                  className={`iaSendButton ${input.trim() ? "iaSendButtonActive" : ""}`}
                   onClick={handleSend}
                   disabled={!input.trim()}
                 >
@@ -483,7 +428,7 @@ export default function Widget() {
                 </button>
               </div>
 
-              <div className={styles.chatFooter}>
+              <div className="iaChatFooter">
                 Powered by <span>IA Financeiro</span>
               </div>
             </div>
@@ -494,13 +439,13 @@ export default function Widget() {
       {/* Botão flutuante */}
       <button
         type="button"
-        className={`${styles.fab} ${isOpen ? styles.fabOpen : ""}`}
+        className={`iaFab ${isOpen ? "iaFabOpen" : ""}`}
         onClick={() => (isOpen ? handleClose() : setIsOpen(true))}
         aria-label={isOpen ? "Fechar assistente" : "Abrir assistente"}
       >
         {isOpen ? (
           <svg
-            className={styles.fabIcon}
+            className="iaFabIcon"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -513,7 +458,7 @@ export default function Widget() {
           </svg>
         ) : (
           <svg
-            className={styles.fabIcon}
+            className="iaFabIcon"
             width="26"
             height="26"
             viewBox="0 0 24 24"
@@ -528,9 +473,9 @@ export default function Widget() {
 
       {/* Label do FAB quando fechado */}
       {!isOpen && (
-        <div className={styles.fabLabel}>
-          <span className={styles.fabLabelText}>Assistente IA</span>
-          <span className={styles.fabLabelSubtext}>Online agora</span>
+        <div className="iaFabLabel">
+          <span className="iaFabLabelText">Assistente IA</span>
+          <span className="iaFabLabelSubtext">Online agora</span>
         </div>
       )}
     </div>
