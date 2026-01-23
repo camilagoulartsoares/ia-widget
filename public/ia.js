@@ -10,7 +10,10 @@
     ? agentsRaw.split(",").map(function (s) { return s.trim(); }).filter(Boolean)
     : undefined;
 
-  console.log("[IA Widget] loader ok", { color: color, logo: logo, agents: agents });
+  // ✅ Base do diretório onde está o ia.js (serve para css/js/imagens no embed)
+  var assetBase = new URL("./", script.src).toString();
+
+  console.log("[IA Widget] loader ok", { color: color, logo: logo, agents: agents, assetBase: assetBase });
 
   // Container fixo
   var host = document.createElement("div");
@@ -32,12 +35,12 @@
   // CSS do widget (ARQUIVO REAL)
   var css = document.createElement("link");
   css.rel = "stylesheet";
-  css.href = new URL("widget-entry.css", script.src).toString();
+  css.href = new URL("widget-entry.css", assetBase).toString();
   root.appendChild(css);
 
   // Bundle do widget (ARQUIVO REAL)
   var js = document.createElement("script");
-  js.src = new URL("widget-entry.iife.js", script.src).toString();
+  js.src = new URL("widget-entry.iife.js", assetBase).toString();
   js.async = true;
 
   js.onload = function () {
@@ -51,7 +54,8 @@
     window.IAWidget.mount(mountPoint, {
       color: color,
       logo: logo,
-      agents: agents
+      agents: agents,
+      assetBase: assetBase, // ✅ aqui!
     });
 
     console.log("[IA Widget] mount OK");

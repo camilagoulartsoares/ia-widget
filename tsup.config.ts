@@ -3,7 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig({
   entry: ["src/embed/widget-entry.tsx"],
   format: ["iife"],
-  globalName: "IAWidgetBundle",
+  globalName: "IAWidget",          // ✅ aqui
   outDir: "public",
   minify: true,
   splitting: false,

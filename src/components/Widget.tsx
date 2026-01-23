@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../embed/widget.css";
+import styles from "./Widget.module.css";
 
-const ATTENDANT_URL = "http://localhost:3000/attendant.jpg";
+type ItemColor = "green" | "blue" | "teal" | "red";
 
 const items = [
   { id: "trends", title: "Análise de Tendências", desc: "Identifique padrões nos seus dados financeiros", color: "green", progress: 85 },
@@ -11,11 +11,7 @@ const items = [
 ] as const;
 
 type Item = (typeof items)[number];
-
-
 type View = "menu" | "chat";
-
-
 
 interface Message {
   id: number;
@@ -24,7 +20,34 @@ interface Message {
   time: string;
 }
 
-export default function Widget() {
+export type WidgetOptions = {
+  color?: string;
+  logo?: string;
+  agents?: string[];
+
+  /**
+   * Base para assets quando rodar EMBED (no site do cliente).
+   * Ex: "https://cdn.meusite.com/widget/"
+   */
+  assetBase?: string;
+};
+
+function joinBase(base: string | undefined, file: string) {
+  if (!base) return `/${file}`; // dev/next: /attendant.jpg
+  try {
+    return new URL(file, base.endsWith("/") ? base : base + "/").toString();
+  } catch {
+    const b = base.endsWith("/") ? base : base + "/";
+    return b + file;
+  }
+}
+
+export default function Widget(props: WidgetOptions) {
+
+  void styles;
+
+  const attendantUrl = joinBase(props.assetBase, "attendant.jpg");
+
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<View>("menu");
   const [activeItem, setActiveItem] = useState<Item | null>(null);
@@ -54,7 +77,6 @@ export default function Widget() {
 
   const handleItemClick = (item: Item) => {
     setActiveItem(item);
-    setView("chat");
     setView("chat");
     setIsTyping(true);
     setMessages([]);
@@ -145,34 +167,10 @@ export default function Widget() {
             {/* Header Menu */}
             <header className="iaHeader">
               <div className="iaHeaderIcon">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2L2 7L12 12L22 7L12 2Z"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M2 17L12 22L22 17"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M2 12L12 17L22 12"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
               <div className="iaHeaderText">
@@ -186,47 +184,21 @@ export default function Widget() {
             {/* Lista */}
             <div className="iaList">
               {items.map((item) => (
-                <button
-                  type="button"
-                  key={item.id}
-                  className="iaItem"
-                  onClick={() => handleItemClick(item)}
-                >
-                  <div className={`iaIcon iaIcon_${item.color}`}>
+                <button type="button" key={item.id} className="iaItem" onClick={() => handleItemClick(item)}>
+                  <div className={`iaIcon iaIcon_${item.color as ItemColor}`}>
                     {item.color === "green" && (
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                       </svg>
                     )}
                     {item.color === "blue" && (
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <circle cx="12" cy="12" r="10" />
                         <path d="M12 6v6l4 2" />
                       </svg>
                     )}
                     {item.color === "teal" && (
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <path d="M14 2v6h6" />
                         <path d="M16 13H8" />
@@ -235,14 +207,7 @@ export default function Widget() {
                       </svg>
                     )}
                     {item.color === "red" && (
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <circle cx="12" cy="12" r="10" />
                         <line x1="12" y1="8" x2="12" y2="12" />
                         <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -256,10 +221,7 @@ export default function Widget() {
                   </div>
 
                   <div className="iaProgressBar">
-                    <div
-                      className={`iaProgressFill iaProgress_${item.color}`}
-                      style={{ height: `${item.progress}%` }}
-                    />
+                    <div className={`iaProgressFill iaProgress_${item.color as ItemColor}`} style={{ height: `${item.progress}%` }} />
                   </div>
                 </button>
               ))}
@@ -269,14 +231,7 @@ export default function Widget() {
             <footer className="iaFooter">
               <button type="button" className="iaLink">
                 Ver todas as funcionalidades
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
@@ -287,26 +242,13 @@ export default function Widget() {
             {/* Chat Header */}
             <header className="iaChatHeader">
               <button type="button" className="iaBackButton" onClick={handleBack}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M19 12H5M12 19l-7-7 7-7" />
                 </svg>
               </button>
 
               <div className="iaChatAvatarWrapper">
-                <img
-                  src={ATTENDANT_URL}
-                  alt="Ana"
-                  width={48}
-                  height={48}
-                  className="iaChatAvatarImage"
-                />
+                <img src={attendantUrl} alt="Ana" width={48} height={48} className="iaChatAvatarImage" />
                 <span className="iaOnlineBadge" />
               </div>
 
@@ -319,14 +261,7 @@ export default function Widget() {
               </div>
 
               <button type="button" className="iaCloseButton" onClick={handleClose}>
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
@@ -336,19 +271,10 @@ export default function Widget() {
             {/* Chat Messages */}
             <div className="iaChatMessages">
               {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`iaMessage ${msg.sender === "user" ? "iaUserMessage" : "iaBotMessage"}`}
-                >
+                <div key={msg.id} className={`iaMessage ${msg.sender === "user" ? "iaUserMessage" : "iaBotMessage"}`}>
                   {msg.sender === "bot" && (
                     <div className="iaMessageBotAvatar">
-                      <img
-                        src={ATTENDANT_URL}
-                        alt="Ana"
-                        width={32}
-                        height={32}
-                        className="iaMessageBotAvatarImage"
-                      />
+                      <img src={attendantUrl} alt="Ana" width={32} height={32} className="iaMessageBotAvatarImage" />
                     </div>
                   )}
 
@@ -362,13 +288,7 @@ export default function Widget() {
               {isTyping && (
                 <div className="iaMessage iaBotMessage">
                   <div className="iaMessageBotAvatar">
-                    <img
-                      src={ATTENDANT_URL}
-                      alt="Ana"
-                      width={32}
-                      height={32}
-                      className="iaMessageBotAvatarImage"
-                    />
+                    <img src={attendantUrl} alt="Ana" width={32} height={32} className="iaMessageBotAvatarImage" />
                   </div>
                   <div className="iaMessageContent iaTypingIndicator">
                     <div className="iaTypingDots">
@@ -387,14 +307,7 @@ export default function Widget() {
             <div className="iaChatInputWrapper">
               <div className="iaChatInputContainer">
                 <button type="button" className="iaAttachButton">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                   </svg>
                 </button>
@@ -414,14 +327,7 @@ export default function Widget() {
                   onClick={handleSend}
                   disabled={!input.trim()}
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="22" y1="2" x2="11" y2="13" />
                     <polygon points="22 2 15 22 11 13 2 9 22 2" />
                   </svg>
@@ -444,28 +350,12 @@ export default function Widget() {
         aria-label={isOpen ? "Fechar assistente" : "Abrir assistente"}
       >
         {isOpen ? (
-          <svg
-            className="iaFabIcon"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-          >
+          <svg className="iaFabIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         ) : (
-          <svg
-            className="iaFabIcon"
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
+          <svg className="iaFabIcon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
         )}
