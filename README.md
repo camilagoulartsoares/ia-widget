@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Widget IA (Embed)
 
-## Getting Started
+Widget de atendimento/assistente em React empacotado como bundle IIFE para ser embutido em qualquer site (ex.: Angular) via uma única tag <script>.
+O loader cria um container fixo no canto da tela, aplica estilos isolados com Shadow DOM e monta o React dentro do host.
 
-First, run the development server:
+Como foi feito
 
-```bash
+O projeto gera 3 arquivos públicos:
+
+public/ia.js → loader do widget (usado no site cliente)
+
+public/widget-entry.iife.js → bundle final (React empacotado em IIFE via tsup)
+
+public/ia-widget.css (ou widget.css) → estilos do widget (carregados dentro do Shadow DOM)
+
+Arquitetura (resumo)
+
+O site do cliente adiciona:
+
+<script src=".../ia.js" data-color="#0044cc" data-logo="..." data-agents="financeiro,suporte"></script>
+
+
+O ia.js:
+
+lê as configs data-*
+
+cria o host fixo (#ia-widget-host)
+
+cria shadowRoot (para isolar CSS do cliente)
+
+injeta o CSS do widget via <link rel="stylesheet">
+
+carrega o bundle widget-entry.iife.js
+
+O bundle expõe:
+
+window.IAWidget.mount(el, options)
+
+
+e monta o React no el.
+
+Como rodar localmente
+1) Instalar
+npm install
+
+2) Rodar o projeto (Next)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3) Gerar o bundle do widget (IIFE)
+npm run build:embed
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Ao final, os arquivos gerados ficam em public/.
 
-## Learn More
+Como usar em outro projeto (ex.: Angular)
 
-To learn more about Next.js, take a look at the following resources:
+No index.html do projeto cliente, coloque:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<script
+  src="http://localhost:3000/ia.js"
+  data-color="#0044cc"
+  data-logo="https://sistema.com/logo.png"
+  data-agents="financeiro,suporte,relatorios">
+</script>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+✅ Quando a página carregar, o widget aparece no canto inferior direito.
