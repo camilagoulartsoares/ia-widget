@@ -24,16 +24,11 @@ export type WidgetOptions = {
   color?: string;
   logo?: string;
   agents?: string[];
-
-  /**
-   * Base para assets quando rodar EMBED (no site do cliente).
-   * Ex: "https://cdn.meusite.com/widget/"
-   */
   assetBase?: string;
 };
 
 function joinBase(base: string | undefined, file: string) {
-  if (!base) return `/${file}`; // dev/next: /attendant.jpg
+  if (!base) return `/${file}`;
   try {
     return new URL(file, base.endsWith("/") ? base : base + "/").toString();
   } catch {
@@ -160,11 +155,9 @@ export default function Widget(props: WidgetOptions) {
 
   return (
     <div className="iaStage">
-      {/* Card do Widget */}
       <div className={`iaCard ${isOpen ? "iaCardOpen" : "iaCardClosed"}`}>
         {view === "menu" ? (
           <>
-            {/* Header Menu */}
             <header className="iaHeader">
               <div className="iaHeaderIcon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -181,7 +174,6 @@ export default function Widget(props: WidgetOptions) {
 
             <div className="iaDivider" />
 
-            {/* Lista */}
             <div className="iaList">
               {items.map((item) => (
                 <button type="button" key={item.id} className="iaItem" onClick={() => handleItemClick(item)}>
@@ -227,7 +219,6 @@ export default function Widget(props: WidgetOptions) {
               ))}
             </div>
 
-            {/* Footer */}
             <footer className="iaFooter">
               <button type="button" className="iaLink">
                 Ver todas as funcionalidades
@@ -239,13 +230,30 @@ export default function Widget(props: WidgetOptions) {
           </>
         ) : (
           <>
-            {/* Chat Header */}
             <header className="iaChatHeader">
-              <button type="button" className="iaBackButton" onClick={handleBack}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
+              <button
+                type="button"
+                className="iaBackButton"
+                onClick={handleBack}
+                aria-label="Voltar"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19 12H5M12 19l-7-7 7-7"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
+
 
               <div className="iaChatAvatarWrapper">
                 <img src={attendantUrl} alt="Ana" width={48} height={48} className="iaChatAvatarImage" />
@@ -268,7 +276,6 @@ export default function Widget(props: WidgetOptions) {
               </button>
             </header>
 
-            {/* Chat Messages */}
             <div className="iaChatMessages">
               {messages.map((msg) => (
                 <div key={msg.id} className={`iaMessage ${msg.sender === "user" ? "iaUserMessage" : "iaBotMessage"}`}>
@@ -303,7 +310,6 @@ export default function Widget(props: WidgetOptions) {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Chat Input */}
             <div className="iaChatInputWrapper">
               <div className="iaChatInputContainer">
                 <button type="button" className="iaAttachButton">
@@ -342,7 +348,6 @@ export default function Widget(props: WidgetOptions) {
         )}
       </div>
 
-      {/* Botão flutuante */}
       <button
         type="button"
         className={`iaFab ${isOpen ? "iaFabOpen" : ""}`}
@@ -361,7 +366,6 @@ export default function Widget(props: WidgetOptions) {
         )}
       </button>
 
-      {/* Label do FAB quando fechado */}
       {!isOpen && (
         <div className="iaFabLabel">
           <span className="iaFabLabelText">Assistente IA</span>

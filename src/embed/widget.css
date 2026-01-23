@@ -1,4 +1,3 @@
-/* Stage - Container principal */
 .iaStage {
   position: fixed;
   bottom: 24px;
@@ -11,7 +10,6 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Card */
 .iaCard {
   background: #ffffff;
   border-radius: 24px;
@@ -38,7 +36,6 @@
   pointer-events: none;
 }
 
-/* Header Menu */
 .iaHeader {
   display: flex;
   align-items: center;
@@ -84,7 +81,6 @@
   margin: 0 24px;
 }
 
-/* Lista */
 .iaList {
   padding: 20px 20px;
   display: flex;
@@ -127,10 +123,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* ✅ IMPORTANTE:
-   Seu JSX usa className={`iaIcon iaIcon_${item.color}`}
-   então os seletores precisam ser .iaIcon_green / .iaIcon_blue etc.
-*/
 .iaIcon_green {
   background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
   color: #16a34a;
@@ -173,7 +165,6 @@
   font-weight: 400;
 }
 
-/* Progress Bar */
 .iaProgressBar {
   width: 6px;
   height: 46px;
@@ -192,7 +183,6 @@
   transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ✅ Seu JSX usa iaProgress_${item.color} */
 .iaProgress_green {
   background: linear-gradient(to top, #16a34a, #4ade80);
 }
@@ -209,7 +199,6 @@
   background: linear-gradient(to top, #dc2626, #f87171);
 }
 
-/* Footer */
 .iaFooter {
   padding: 20px 24px;
   border-top: 1px solid #f1f5f9;
@@ -234,10 +223,6 @@
   color: #3b82f6;
   gap: 12px;
 }
-
-/* ==================== */
-/* Chat View Styles */
-/* ==================== */
 
 .iaChatHeader {
   display: flex;
@@ -482,7 +467,6 @@
   text-align: right;
 }
 
-/* Typing Indicator */
 .iaTypingIndicator {
   padding: 16px 20px;
 }
@@ -520,7 +504,6 @@
   }
 }
 
-/* Chat Input */
 .iaChatInputWrapper {
   padding: 16px 20px 20px;
   background: white;
@@ -619,7 +602,7 @@
   font-weight: 600;
 }
 
-/* FAB */
+
 .iaFab {
   width: 60px;
   height: 60px;
@@ -670,7 +653,6 @@
   transform: rotate(180deg);
 }
 
-/* FAB Label */
 .iaFabLabel {
   position: absolute;
   bottom: 24px;
@@ -733,7 +715,6 @@
   }
 }
 
-/* Responsivo */
 @media (max-width: 440px) {
   .iaStage {
     bottom: 16px;
@@ -752,4 +733,19 @@
   .iaChatMessages {
     height: 280px;
   }
+}
+
+
+.iaIcon svg {
+  display: block;         
+  width: 18px;
+  height: 18px;
+}
+
+.iaIcon svg,
+.iaIcon svg * {
+  stroke: currentColor !important;
+  fill: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
